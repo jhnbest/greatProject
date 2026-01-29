@@ -1,0 +1,181 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+  font-size: 14px;
+  color: #303133;
+  background-color: #f5f7fa;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: #409EFF;
+  text-decoration: none;
+  
+  &:hover {
+    color: #66b1ff;
+  }
+}
+
+.el-card {
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  
+  &__header {
+    font-weight: 500;
+  }
+}
+
+.el-table {
+  th {
+    background-color: #fafafa;
+  }
+}
+
+.el-pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.el-message-box {
+  border-radius: 4px;
+}
+
+.el-notification {
+  border-radius: 4px;
+}
+
+.el-dialog {
+  border-radius: 4px;
+  
+  &__header {
+    border-bottom: 1px solid #ebeef5;
+    padding-bottom: 15px;
+  }
+  
+  &__footer {
+    border-top: 1px solid #ebeef5;
+    padding-top: 15px;
+  }
+}
+
+.el-input__inner,
+.el-textarea__inner,
+.el-select .el-input__inner {
+  border-radius: 4px;
+}
+
+.el-button {
+  border-radius: 4px;
+}
+
+.el-tag {
+  border-radius: 4px;
+}
+
+.clearfix {
+  &:before,
+  &:after {
+    display: table;
+    content: '';
+  }
+  
+  &:after {
+    clear: both;
+  }
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+
+.mb-10 {
+  margin-bottom: 10px;
+}
+
+.ml-10 {
+  margin-left: 10px;
+}
+
+.mr-10 {
+  margin-right: 10px;
+}
+
+.p-10 {
+  padding: 10px;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.w100 {
+  width: 100%;
+}
+
+.h100 {
+  height: 100%;
+}
+
+.success-text {
+  color: #67C23A;
+}
+
+.warning-text {
+  color: #E6A23C;
+}
+
+.danger-text {
+  color: #F56C6C;
+}
+
+.info-text {
+  color: #909399;
+}
+
+@media (max-width: 768px) {
+  .el-dialog {
+    width: 90% !important;
+    margin: 5vh auto !important;
+  }
+  
+  .el-pagination {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
+.echarts {
+  width: 100%;
+  height: 100%;
+}

@@ -1,0 +1,27 @@
+{
+  "name": "nvr-monitor-frontend",
+  "version": "1.0.0",
+  "description": "NVR设备监控系统前端",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^2.7.14",
+    "vue-router": "^3.6.5",
+    "vuex": "^3.6.2",
+    "axios": "^1.6.0",
+    "element-ui": "^2.15.14",
+    "echarts": "^5.4.3",
+    "vue-echarts": "^5.0.1",
+    "socket.io-client": "^4.7.2",
+    "dayjs": "^1.11.10",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue2": "^2.3.1",
+    "vite": "^5.0.0",
+    "sass": "^1.69.5"
+  }
+}
