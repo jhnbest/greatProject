@@ -4,7 +4,7 @@
       <img src="@/assets/logo.svg" alt="Logo" class="logo" />
       <span v-show="!collapsed" class="title">NVR监控平台</span>
     </div>
-    
+
     <el-menu
       :default-active="currentRoute"
       :collapse="collapsed"
@@ -14,12 +14,10 @@
       active-text-color="#409EFF"
       router
     >
-      <template v-for="route in menus">
-        <el-menu-item :key="route.path" :index="route.path">
-          <i :class="route.meta.icon"></i>
-          <span slot="title">{{ route.meta.title }}</span>
-        </el-menu-item>
-      </template>
+      <el-menu-item v-for="route in menus" :key="route.path" :index="route.path">
+        <i :class="route.meta.icon"></i>
+        <span slot="title">{{ route.meta.title }}</span>
+      </el-menu-item>
     </el-menu>
 
     <div class="collapse-btn" @click="$emit('toggle')">
