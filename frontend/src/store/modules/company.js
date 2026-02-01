@@ -25,7 +25,7 @@ const mutations = {
 const actions = {
   async getCompanies({ commit }) {
     try {
-      const response = await api.getCompanies();
+      const response = await api.companies.getList();
       if (response.data.success) {
         commit('SET_COMPANIES', response.data.data);
       }
@@ -36,7 +36,7 @@ const actions = {
 
   async getCompanyTree({ commit }) {
     try {
-      const response = await api.getCompanyTree();
+      const response = await api.companies.getTree();
       if (response.data.success) {
         commit('SET_COMPANY_TREE', response.data.data);
       }
@@ -47,7 +47,7 @@ const actions = {
 
   async getCompanyDetail({ commit }, id) {
     try {
-      const response = await api.getCompany(id);
+      const response = await api.companies.getDetail(id);
       if (response.data.success) {
         commit('SET_CURRENT_COMPANY', response.data.data);
         return response.data.data;
@@ -61,7 +61,7 @@ const actions = {
 
   async getCompanyStats({ commit }, id) {
     try {
-      const response = await api.getCompanyStats(id);
+      const response = await api.companies.getStats(id);
       if (response.data.success) {
         commit('SET_COMPANY_STATS', response.data.data);
       }
@@ -72,7 +72,7 @@ const actions = {
 
   async createCompany(_, companyData) {
     try {
-      const response = await api.createCompany(companyData);
+      const response = await api.companies.create(companyData);
       return response.data;
     } catch (error) {
       return { success: false, message: error.message };
@@ -81,7 +81,7 @@ const actions = {
 
   async updateCompany(_, { id, data }) {
     try {
-      const response = await api.updateCompany(id, data);
+      const response = await api.companies.update(id, data);
       return response.data;
     } catch (error) {
       return { success: false, message: error.message };
@@ -90,7 +90,7 @@ const actions = {
 
   async deleteCompany(_, id) {
     try {
-      const response = await api.deleteCompany(id);
+      const response = await api.companies.delete(id);
       return response.data;
     } catch (error) {
       return { success: false, message: error.message };

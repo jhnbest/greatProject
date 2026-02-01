@@ -6,8 +6,16 @@ export default defineConfig({
   plugins: [vue2()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src')
+      '@': path.resolve(__dirname, 'src'),
+      'lodash': 'lodash-es',
+      'vue-router': 'vue-router/dist/vue-router.esm.js'
     }
+  },
+  optimizeDeps: {
+    include: ['lodash', 'lodash-es', 'vue-router']
+  },
+  ssr: {
+    noExternal: ['lodash', 'lodash-es']
   },
   server: {
     port: 8080,

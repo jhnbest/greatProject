@@ -22,7 +22,7 @@ const mutations = {
 const actions = {
   async login({ commit }, { username, password }) {
     try {
-      const response = await api.login(username, password);
+      const response = await api.auth.login(username, password);
       if (response.data.success) {
         commit('SET_TOKEN', response.data.data.token);
         commit('SET_USER_INFO', response.data.data.user);
@@ -36,7 +36,7 @@ const actions = {
 
   async logout({ dispatch }) {
     try {
-      await api.logout();
+      await api.auth.logout();
     } catch (error) {
       console.error('登出请求失败', error);
     }
@@ -45,7 +45,7 @@ const actions = {
 
   async getUserInfo({ commit }) {
     try {
-      const response = await api.getUserProfile();
+      const response = await api.auth.getProfile();
       if (response.data.success) {
         commit('SET_USER_INFO', response.data.data);
       }
@@ -56,7 +56,7 @@ const actions = {
 
   async getUsers({ commit }, params) {
     try {
-      const response = await api.getUsers(params);
+      const response = await api.auth.getUsers(params);
       if (response.data.success) {
         commit('SET_USERS', response.data.data);
       }
@@ -67,7 +67,7 @@ const actions = {
 
   async updateUserStatus({ dispatch }, { id, status }) {
     try {
-      const response = await api.updateUserStatus(id, status);
+      const response = await api.auth.updateUserStatus(id, status);
       if (response.data.success) {
         dispatch('getUsers', {});
         return { success: true };
@@ -80,7 +80,7 @@ const actions = {
 
   async changePassword(_, { oldPassword, newPassword }) {
     try {
-      const response = await api.changePassword(oldPassword, newPassword);
+      const response = await api.auth.changePassword(oldPassword, newPassword);
       return response.data;
     } catch (error) {
       return { success: false, message: error.message };

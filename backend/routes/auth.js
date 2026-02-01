@@ -35,6 +35,8 @@ router.post('/login', [
       [username]
     );
 
+    logger.info(`登录查询用户: ${username}, 找到用户数: ${users.length}`);
+    
     if (users.length === 0) {
       return res.status(401).json({
         success: false,
@@ -43,8 +45,21 @@ router.post('/login', [
     }
 
     const user = users[0];
+    
+    logger.info(`用户数据字段: ${Object.keys(user).join(', ')}`);
+    logger.info(`PASSWORD字段值: ${user.PASSWORD ? '存在' : '不存在'}, password字段值: ${user.password ? '存在' : '不存在'}`);
 
-    if (!auth.verifyPassword(password, user.PASSWORD)) {
+    // 检查密码字段是否存在（达梦数据库可能返回小写字段名）
+    const storedPassword = user.PASSWORD || user.password;
+    
+    if (!storedPassword) {
+      return res.status(401).json({
+        success: false,
+        message: '用户密码未设置'
+      });
+    }
+
+    if (!auth.verifyPassword(password, storedPassword)) {
       return res.status(401).json({
         success: false,
         message: '用户名或密码错误'

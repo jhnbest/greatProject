@@ -114,7 +114,12 @@ const authMiddleware = {
 
   verifyPassword: (plainPassword, hashedPassword) => {
     const bcrypt = require('bcryptjs');
-    return bcrypt.compareSync(plainPassword, hashedPassword);
+    try {
+      return bcrypt.compareSync(String(plainPassword), String(hashedPassword));
+    } catch (error) {
+      logger.error('密码验证失败', { error: error.message, plainPassword: !!plainPassword, hashedPassword: !!hashedPassword });
+      return false;
+    }
   },
 
   hashPassword: (password) => {

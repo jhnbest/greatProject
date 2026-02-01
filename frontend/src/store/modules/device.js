@@ -31,7 +31,7 @@ const mutations = {
 const actions = {
   async getDevices({ commit }, params) {
     try {
-      const response = await api.getDevices(params);
+      const response = await api.devices.getList(params);
       if (response.data.success) {
         commit('SET_DEVICES', response.data.data);
       }
@@ -42,7 +42,7 @@ const actions = {
 
   async getAllDevices({ commit }) {
     try {
-      const response = await api.getAllDevices();
+      const response = await api.devices.getAll();
       if (response.data.success) {
         return response.data.data;
       }
@@ -55,7 +55,7 @@ const actions = {
 
   async getDeviceDetail({ commit }, id) {
     try {
-      const response = await api.getDevice(id);
+      const response = await api.devices.getDetail(id);
       if (response.data.success) {
         commit('SET_CURRENT_DEVICE', response.data.data);
         return response.data.data;
@@ -69,7 +69,7 @@ const actions = {
 
   async getRealtimeData({ commit }, params) {
     try {
-      const response = await api.getRealtimeMonitor(params);
+      const response = await api.monitor.getRealtime(params);
       if (response.data.success) {
         commit('SET_REALTIME_DATA', response.data.data);
       }
@@ -80,7 +80,7 @@ const actions = {
 
   async getDeviceStatistics({ commit }) {
     try {
-      const response = await api.getMonitorStatistics();
+      const response = await api.monitor.getStatistics();
       if (response.data.success) {
         commit('SET_DEVICE_STATISTICS', response.data.data);
       }
@@ -91,7 +91,7 @@ const actions = {
 
   async getBrands({ commit }) {
     try {
-      const response = await api.getDeviceBrands();
+      const response = await api.devices.getBrands();
       if (response.data.success) {
         commit('SET_BRANDS', response.data.data);
       }
@@ -102,7 +102,7 @@ const actions = {
 
   async createDevice(_, deviceData) {
     try {
-      const response = await api.createDevice(deviceData);
+      const response = await api.devices.create(deviceData);
       return response.data;
     } catch (error) {
       return { success: false, message: error.message };
@@ -111,7 +111,7 @@ const actions = {
 
   async updateDevice(_, { id, data }) {
     try {
-      const response = await api.updateDevice(id, data);
+      const response = await api.devices.update(id, data);
       return response.data;
     } catch (error) {
       return { success: false, message: error.message };
@@ -120,7 +120,7 @@ const actions = {
 
   async deleteDevice(_, id) {
     try {
-      const response = await api.deleteDevice(id);
+      const response = await api.devices.delete(id);
       return response.data;
     } catch (error) {
       return { success: false, message: error.message };
@@ -129,7 +129,7 @@ const actions = {
 
   async testDeviceConnection(_, id) {
     try {
-      const response = await api.testDeviceConnection(id);
+      const response = await api.devices.testConnection(id);
       return response.data;
     } catch (error) {
       return { success: false, message: error.message };
@@ -138,7 +138,7 @@ const actions = {
 
   async collectDeviceData(_, id) {
     try {
-      const response = await api.collectDeviceData(id);
+      const response = await api.devices.collectData(id);
       return response.data;
     } catch (error) {
       return { success: false, message: error.message };
@@ -147,7 +147,7 @@ const actions = {
 
   async getDeviceHistory(_, { id, params }) {
     try {
-      const response = await api.getDeviceHistory(id, params);
+      const response = await api.devices.getHistory(id, params);
       return response.data;
     } catch (error) {
       return { success: false, message: error.message };
@@ -156,7 +156,7 @@ const actions = {
 
   async updateDeviceStatus(_, { id, status }) {
     try {
-      const response = await api.updateDeviceStatus(id, status);
+      const response = await api.devices.updateStatus(id, status);
       return response.data;
     } catch (error) {
       return { success: false, message: error.message };

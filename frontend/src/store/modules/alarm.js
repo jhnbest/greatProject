@@ -45,7 +45,7 @@ const mutations = {
 const actions = {
   async getAlarms({ commit }, params) {
     try {
-      const response = await api.getAlarms(params);
+      const response = await api.alarms.getList(params);
       if (response.data.success) {
         commit('SET_ALARMS', response.data.data);
       }
@@ -56,7 +56,7 @@ const actions = {
 
   async getPendingAlarms({ commit }) {
     try {
-      const response = await api.getPendingAlarms();
+      const response = await api.alarms.getPending();
       if (response.data.success) {
         commit('SET_PENDING_ALARMS', response.data.data);
       }
@@ -67,7 +67,7 @@ const actions = {
 
   async getAlarmStatistics({ commit }) {
     try {
-      const response = await api.getAlarmStatistics();
+      const response = await api.alarms.getStatistics();
       if (response.data.success) {
         commit('SET_ALARM_STATISTICS', response.data.data);
       }
@@ -78,7 +78,7 @@ const actions = {
 
   async getAlarmTrend({ commit }, days) {
     try {
-      const response = await api.getAlarmTrend(days);
+      const response = await api.alarms.getTrend(days);
       if (response.data.success) {
         commit('SET_ALARM_TREND', response.data.data);
       }
@@ -89,7 +89,7 @@ const actions = {
 
   async getAlarmTypes({ commit }) {
     try {
-      const response = await api.getAlarmTypes();
+      const response = await api.alarms.getTypes();
       if (response.data.success) {
         commit('SET_ALARM_TYPES', response.data.data);
       }
@@ -100,7 +100,7 @@ const actions = {
 
   async getAlarmLevels({ commit }) {
     try {
-      const response = await api.getAlarmLevels();
+      const response = await api.alarms.getLevels();
       if (response.data.success) {
         commit('SET_ALARM_LEVELS', response.data.data);
       }
@@ -111,7 +111,7 @@ const actions = {
 
   async handleAlarm({ dispatch }, { id, handleContent }) {
     try {
-      const response = await api.handleAlarm(id, handleContent);
+      const response = await api.alarms.handle(id, handleContent);
       if (response.data.success) {
         dispatch('getPendingAlarms');
         return { success: true };
@@ -124,7 +124,7 @@ const actions = {
 
   async batchHandleAlarms({ dispatch }, { alarmIds, handleContent }) {
     try {
-      const response = await api.batchHandleAlarms(alarmIds, handleContent);
+      const response = await api.alarms.batchHandle(alarmIds, handleContent);
       if (response.data.success) {
         dispatch('getPendingAlarms');
         return response.data;

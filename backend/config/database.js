@@ -1,13 +1,15 @@
 /**
  * 达梦数据库连接配置
+ * 参考达梦官方文档: https://eco.dameng.com/document/dm/zh-cn/pm/nodejs-rogramming-guide.html
  */
 
-const dm = require('dm');
+const dmdb = require("dmdb");
 const logger = require('../utils/logger');
 
 class Database {
   constructor() {
     this.pool = null;
+    this.connection = null;
     this.config = {
       host: process.env.DB_HOST || 'localhost',
       port: parseInt(process.env.DB_PORT) || 5236,
@@ -20,25 +22,20 @@ class Database {
   async connect() {
     try {
       logger.info(`正在连接达梦数据库: ${this.config.host}:${this.config.port}`);
-      
-      // 创建连接池
-      this.pool = dm.createPool({
-        host: this.config.host,
-        port: this.config.port,
-        user: this.config.user,
-        password: this.config.password,
-        database: this.config.database,
-        connectionLimit: 20,
-        waitForConnections: true,
-        queueLimit: 0
+
+      // 创建连接池（dmdb.createPool返回Promise，需要await）
+      this.pool = await dmdb.createPool({
+        connectString: `dm://${this.config.user}:${this.config.password}@${this.config.host}:${this.config.port}`,
+        poolMax: 20,
+        poolMin: 1
       });
 
-      // 测试连接
-      const connection = await this.pool.getConnection();
-      logger.info('数据库连接池创建成功');
-      connection.release();
-      
-      return this.pool;
+      // 获取连接
+      this.connection = await this.pool.getConnection();
+
+      logger.info('数据库连接成功');
+
+      return this.connection;
     } catch (error) {
       logger.error('数据库连接失败', error);
       throw error;
@@ -47,7 +44,36 @@ class Database {
 
   async query(sql, params = []) {
     try {
-      const [rows] = await this.pool.execute(sql, params);
+      const result = await this.connection.execute(sql, params);
+      
+      let rows = [];
+      
+      if (Array.isArray(result)) {
+        rows = result;
+      } else if (result && Array.isArray(result)) {
+        rows = result;
+      } else if (result && result.rows && Array.isArray(result.rows)) {
+        // 达梦返回格式: { rows: [[值1,值2...], ...], metaData: [{name: 'COL1'}, ...] }
+        if (result.metaData && Array.isArray(result.metaData)) {
+          const columnNames = result.metaData.map(col => col.name);
+          rows = result.rows.map(row => {
+            const obj = {};
+            columnNames.forEach((colName, index) => {
+              obj[colName] = row[index];
+              // 同时添加小写版本
+              obj[colName.toLowerCase()] = row[index];
+            });
+            return obj;
+          });
+        } else {
+          rows = result.rows;
+        }
+      } else if (result && result.data && Array.isArray(result.data)) {
+        rows = result.data;
+      } else if (result && typeof result === 'object') {
+        rows = result[0] ? [result[0]] : [];
+      }
+      
       return rows;
     } catch (error) {
       logger.error('SQL查询失败', { sql, error: error.message });
@@ -98,8 +124,7 @@ class Database {
           STATUS VARCHAR(10) DEFAULT '1',
           REMARKS VARCHAR(500),
           CREATE_TIME DATETIME DEFAULT CURRENT_TIMESTAMP,
-          UPDATE_TIME DATETIME DEFAULT CURRENT_TIMESTAMP,
-          FOREIGN KEY (PARENT_ID) REFERENCES SYS_COMPANY(ID)
+          UPDATE_TIME DATETIME DEFAULT CURRENT_TIMESTAMP
         )
       `);
 
@@ -117,8 +142,7 @@ class Database {
           STATUS VARCHAR(10) DEFAULT '1',
           LAST_LOGIN_TIME DATETIME,
           CREATE_TIME DATETIME DEFAULT CURRENT_TIMESTAMP,
-          UPDATE_TIME DATETIME DEFAULT CURRENT_TIMESTAMP,
-          FOREIGN KEY (COMPANY_ID) REFERENCES SYS_COMPANY(ID)
+          UPDATE_TIME DATETIME DEFAULT CURRENT_TIMESTAMP
         )
       `);
 
@@ -143,8 +167,7 @@ class Database {
           DEVICE_INFO TEXT,
           REMARKS VARCHAR(500),
           CREATE_TIME DATETIME DEFAULT CURRENT_TIMESTAMP,
-          UPDATE_TIME DATETIME DEFAULT CURRENT_TIMESTAMP,
-          FOREIGN KEY (COMPANY_ID) REFERENCES SYS_COMPANY(ID)
+          UPDATE_TIME DATETIME DEFAULT CURRENT_TIMESTAMP
         )
       `);
 
@@ -166,8 +189,7 @@ class Database {
           NETWORK_STATUS VARCHAR(20),
           SYSTEM_TIME DATETIME,
           RAW_DATA TEXT,
-          CREATE_TIME DATETIME DEFAULT CURRENT_TIMESTAMP,
-          FOREIGN KEY (DEVICE_ID) REFERENCES NVR_DEVICE(ID)
+          CREATE_TIME DATETIME DEFAULT CURRENT_TIMESTAMP
         )
       `);
 
@@ -185,9 +207,7 @@ class Database {
           HANDLER_ID VARCHAR(36),
           HANDLE_TIME DATETIME,
           HANDLE_CONTENT VARCHAR(500),
-          CREATE_TIME DATETIME DEFAULT CURRENT_TIMESTAMP,
-          FOREIGN KEY (DEVICE_ID) REFERENCES NVR_DEVICE(ID),
-          FOREIGN KEY (HANDLER_ID) REFERENCES SYS_USER(ID)
+          CREATE_TIME DATETIME DEFAULT CURRENT_TIMESTAMP
         )
       `);
 
